@@ -15,7 +15,7 @@ const Navbar = () => {
           flex items-center gap-6
           rounded-full
           bg-white/80 backdrop-blur-md
-          border border-blue-200
+          
           px-6 py-3
           shadow-sm
           justify-around w-4xl
