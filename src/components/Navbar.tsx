@@ -9,13 +9,12 @@ const Navbar = () => {
   ];
 
   return (
-    <header className="sticky top-4 z-50 flex justify-center">
+    <header className="fixed top-0 left-0 right-0 z-50 flex justify-center pt-4">
       <nav
         className="
           flex items-center gap-6
           rounded-full
           bg-white/80 backdrop-blur-md
-          
           px-6 py-3
           shadow-sm
           justify-around w-4xl
@@ -26,7 +25,8 @@ const Navbar = () => {
           href="/"
           className="text-base font-semibold text-black whitespace-nowrap"
         >
-          <span className="pr-1">Docu</span><span>Mind A</span>I
+          <span className="pr-1">Docu</span>
+          <span>Mind AI</span>
         </Link>
 
         <ul className="hidden md:flex items-center gap-2">
@@ -54,7 +54,7 @@ const Navbar = () => {
                     group-hover:scale-100
                   "
                 />
-                <span className="relative z-10">{item.name}</span>
+                <span className="relative z-10 ">{item.name}</span>
               </Link>
             </li>
           ))}

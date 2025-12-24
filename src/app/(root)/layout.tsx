@@ -23,7 +23,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${victorMono.variable} antialiased bg-linear-r from to-white to bg-blue-50 `}
+        className={`${victorMono.variable} antialiased pt-20 `}
       >
         <Navbar/>
         {children}
