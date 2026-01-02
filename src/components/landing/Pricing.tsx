@@ -1,7 +1,6 @@
 import { Users, Dot, X } from "lucide-react";
 import { BorderBeam } from "@/components/ui/border-beam";
 import { ShinyButton } from "@/components/ui/shiny-button";
-import { Confetti } from "@/components/ui/confetti";
 
 const pricingPlans = [
   {

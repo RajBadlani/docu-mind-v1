@@ -3,8 +3,8 @@ import { Mail, MessageSquare } from "lucide-react";
 
 export function Footer() {
   return (
-    <footer className="relative mt-24 w-full border-t border-blue-100">
-      <div className="mx-auto max-w-6xl px-6 py-10">
+    <footer className="relative mt-24 w-full border border-blue-100 bg-white/90 backdrop-blur-sm">
+      <div className="mx-auto max-w-6xl px-6 py-4">
         
         <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-10">
           

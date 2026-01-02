@@ -55,7 +55,7 @@ export function TestimonialSection() {
                 key={idx}
                 className="basis-full md:basis-1/2 px-4"
               >
-                <div className="h-full min-h-50 md:min-h-55 rounded-2xl bg-white/70 backdrop-blur-md border border-blue-100 p-5 md:p-6 shadow-sm flex flex-col justify-between">
+                <div className="h-full min-h-50 md:min-h-55 rounded-2xl bg-white/70 backdrop-blur-md border border-blue-200 p-5 md:p-6 shadow-sm flex flex-col justify-between">
                   <p className="text-gray-800 text-sm md:text-base leading-relaxed">
                     “{item.quote}”
                   </p>
