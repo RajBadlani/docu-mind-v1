@@ -14,16 +14,44 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+// emuns
+
+enum Plan {
+  FREE
+  PRO
+  ENTERPRISE
+}
+
+enum IngestionStatus {
+  NOT_PROCESSED
+  PROCESSING
+  COMPLETED
+  FAILED
+}
+
+enum Role {
+  USER
+  ASSISTANT
+}
+
 model User {
-  id            String    @id
+  id            String  @id
   name          String
   email         String
-  emailVerified Boolean   @default(false)
+  emailVerified Boolean @default(false)
   image         String?
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
-  sessions      Session[]
-  accounts      Account[]
+
+  plan          Plan      @default(FREE)
+  planExpiredAt DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  sessions  Session[]
+  accounts  Account[]
+  usage     Usage?
+  documents Document[]
+  chats     Chat[]
 
   @@unique([email])
   @@map("user")
@@ -75,4 +103,53 @@ model Verification {
 
   @@index([identifier])
   @@map("verification")
+}
+
+model Document {
+  id     String          @id @default(cuid())
+  name   String
+  key    String
+  size   Int
+  status IngestionStatus @default(NOT_PROCESSED)
+  userId String
+  user   User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  chats  Chat[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Chat {
+  id         String @id @default(cuid())
+  documentId String
+  userId     String
+
+  document Document @relation(fields: [documentId], references: [id], onDelete: Cascade)
+  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  messages Message[]
+
+  createdAt DateTime @default(now())
+}
+
+model Message {
+  id      String @id @default(cuid())
+  chatId  String
+  role    Role
+  content String
+
+  chat Chat @relation(fields: [chatId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+}
+
+model Usage {
+  id     String @id @default(cuid())
+  userId String @unique
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  chatCount Int      @default(0)
+  resetAt   DateTime
+
+  updatedAt DateTime @updatedAt
 }
