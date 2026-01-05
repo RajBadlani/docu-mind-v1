@@ -1,6 +1,6 @@
+import UploadSection from "@/components/upload/UploadSection";
 import { getUser } from "@/lib/getUser";
 import { redirect } from "next/navigation";
-import React from "react";
 
 const DashBoard = async () => {
   const user = await getUser();
@@ -27,10 +27,10 @@ const DashBoard = async () => {
         </div>
       </header>
 
-      <main className="flex flex-col items-center justify-start gap-6 mt-6 mx-auto w-full max-w-4xl">
-        {/* <UploadPdfComponent />
-        <PdfUploadComponent /> */}
-      </main>
+      <section className="relative w-full overflow-hidden rounded-xl  p-2 sm:p-3 ">
+        <UploadSection />
+        {/* <PdfUploadComponent />  */}
+      </section>
     </div>
   );
 };
