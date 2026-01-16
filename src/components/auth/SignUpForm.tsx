@@ -1,6 +1,6 @@
 "use client";
 
-import { signUpAction } from "@/app/actions/authActions";
+import { signUpAction } from "@/actions/authActions";
 import { MessageCircleHeart } from "lucide-react";
 import { useState, useTransition } from "react";
 import { Input } from "../ui/input";
@@ -9,6 +9,7 @@ import Link from "next/link";
 import { Spinner } from "../ui/spinner";
 import { toast } from "sonner";
 import OAuthButtons from "./OAuthButton";
+import { redirect } from "next/navigation";
 
 const SignUpForm = () => {
   const [isPending, startTransition] = useTransition();
@@ -24,13 +25,13 @@ const SignUpForm = () => {
       } else {
         toast.success(res.message);
       }
+      redirect("/log-in");
     });
   }
 
   return (
     <main className="min-h-screen flex items-center justify-center px-4 overflow-hidden">
       <section className="w-full max-w-md rounded-2xl bg-white shadow-xl border border-gray-200 px-8 py-6 space-y-6">
-        
         {/* Header */}
         <div className="flex flex-col items-center gap-2">
           <div className="flex items-center gap-2">
@@ -45,7 +46,9 @@ const SignUpForm = () => {
         {/* Form */}
         <form className="flex flex-col gap-4" action={handleSubmit}>
           <div>
-            <label className="text-sm font-medium text-gray-700">Username</label>
+            <label className="text-sm font-medium text-gray-700">
+              Username
+            </label>
             <Input
               name="name"
               placeholder="Your name"
@@ -66,7 +69,9 @@ const SignUpForm = () => {
           </div>
 
           <div>
-            <label className="text-sm font-medium text-gray-700">Password</label>
+            <label className="text-sm font-medium text-gray-700">
+              Password
+            </label>
             <Input
               name="password"
               type="password"
@@ -103,7 +108,10 @@ const SignUpForm = () => {
         {/* Footer */}
         <p className="text-center text-sm text-gray-600">
           Already have an account?{" "}
-          <Link href="/log-in" className="text-blue-600 font-medium hover:underline">
+          <Link
+            href="/log-in"
+            className="text-blue-600 font-medium hover:underline"
+          >
             Log in
           </Link>
         </p>

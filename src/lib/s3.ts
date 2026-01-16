@@ -48,10 +48,13 @@ export async function s3GetUrl(key: string) {
   const command = new GetObjectCommand({
     Bucket: process.env.AWS_S3_BUCKET,
     Key: key,
+
+    ResponseContentType: "application/pdf",
+    ResponseContentDisposition: "inline",
   });
 
-  const getUrl = await getSignedUrl(s3, command, { expiresIn: 60 });
-  return getUrl;
+  return getSignedUrl(s3, command, { expiresIn: 60*5 });
+   
 }
 
 export async function s3DeleteUrl(key: string) {

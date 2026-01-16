@@ -6,7 +6,7 @@ import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { Spinner } from "../ui/spinner";
 import Link from "next/link";
-import { signInAction } from "@/app/actions/authActions";
+import { signInAction } from "@/actions/authActions";
 import { toast } from "sonner";
 import { redirect } from "next/navigation";
 import OAuthButtons from "./OAuthButton";
@@ -21,7 +21,7 @@ const LogInForm = () => {
       toast.error(res.message);
     } else {
       toast.success(res.message);
-      redirect("/dashboard")
+      redirect("/dashboard");
     }
     setIsPending(false);
   }

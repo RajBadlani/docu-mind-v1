@@ -4,13 +4,13 @@ import { RecursiveCharacterTextSplitter } from "@langchain/textsplitters";
 import { Pinecone } from "@pinecone-database/pinecone";
 import { PineconeStore } from "@langchain/pinecone"
 import { JinaEmbeddings } from "@langchain/community/embeddings/jina";
+import { UnsupportedPdfError } from "../errorClass";
 
 interface FileProps {
   pdfUrl : string,
   pdfName : string,
   pdfId : string,
   userId : string,
-  ingestionStatus: "NOT_INGESTED" | "PROCESSING" | "COMPLETED" | "FAILED";
 }
 
 function normalizeText(text: string): string {
@@ -20,25 +20,7 @@ function normalizeText(text: string): string {
     .trim();
 }
 
-
-
-export async function ingestion({ pdfUrl, pdfName, pdfId, userId , ingestionStatus}: FileProps) {
-    if (ingestionStatus === "COMPLETED") {
-    return {
-      success: true,
-      message: "PDF already ingested",
-      redirectToChat: true,
-      status : 200
-    };
-  }
-
-  if (ingestionStatus === "PROCESSING") {
-    return {
-      success: false,
-      message: "PDF is currently being prepared. Please wait.",
-      statusCode: 409
-    };
-  }
+export async function ingestion({ pdfUrl, pdfName, pdfId, userId }: FileProps) {
 
     try {
 
@@ -50,7 +32,7 @@ export async function ingestion({ pdfUrl, pdfName, pdfId, userId , ingestionStat
       throw new Error("Missing Pinecone Index Name");
 
     const controller = new AbortController()
-    const timeout = setTimeout(()=>controller.abort(),15_000)
+    const timeout = setTimeout(()=>controller.abort(),60_000)
 
     const response = await fetch(pdfUrl , { signal : controller.signal})
     clearTimeout(timeout);
@@ -67,7 +49,7 @@ export async function ingestion({ pdfUrl, pdfName, pdfId, userId , ingestionStat
 
     const numPages = docs.length;
     if (numPages === 0) {
-      throw new Error("PDF has no readable text");
+      throw new UnsupportedPdfError();
     }
 
     const totalLength = docs.reduce(
@@ -134,11 +116,9 @@ export async function ingestion({ pdfUrl, pdfName, pdfId, userId , ingestionStat
 
     console.log(`Storing ${chunkedDoc.length} chunks in Pinecone...`);
     console.log(`Successfully embeddings get stored`);
-
-    return { success : true , message : "PDF Ingested Successfully" , redirectToChat: true, status : 200}
-
+    
     } catch (error) {
         console.error("PDF ingestion failed:", error);
-        return { success : false , messsage : error instanceof Error ? error.message : "Failed to ingest the pdf" , status : 400}
+        throw error
     }
-}
+  }

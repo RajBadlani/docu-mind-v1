@@ -111,3 +111,12 @@ export async function signInAction(formData:FormData) {
         }
     }
 }
+
+
+export async function signOutAction() {
+  await auth.api.signOut({
+    headers: await headers(),
+  });
+  redirect("/log-in");
+}
+

@@ -2,12 +2,13 @@
 
 import { getUser } from "@/lib/getUser";
 import { prisma } from "@/lib/prisma"
-
+import { revalidatePath } from "next/cache";
 
 interface PDFData {
-    pdfName : string,
-    pdfKey : string,
-    pdfSize : number,
+    pdfId? : string,
+    pdfName? : string,
+    pdfKey? : string,
+    pdfSize? : number,
 }
 export async function savePdfToDb({pdfName,pdfKey,pdfSize}:PDFData) {
     const user = await getUser();
@@ -35,6 +36,7 @@ export async function savePdfToDb({pdfName,pdfKey,pdfSize}:PDFData) {
             success: false,
             message: "Failed to save PDF to database"
         }
+        revalidatePath("/dashboard")
         return {
             success: true,
             message: "PDF uploaded successfully!",
@@ -49,3 +51,4 @@ export async function savePdfToDb({pdfName,pdfKey,pdfSize}:PDFData) {
         }
     }
 }
+

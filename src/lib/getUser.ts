@@ -7,3 +7,4 @@ export async function getUser() {
     });
     return session?.user ?? null
 }
+
