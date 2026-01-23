@@ -1,4 +1,5 @@
 "use client";
+
 import { User, Document } from "@/generated/prisma/client";
 import {
   ResizableHandle,
@@ -20,7 +21,8 @@ const ChatPageComponent = ({
   user: User;
 }) => {
   return (
-    <div className="flex h-screen w-full flex-col bg-muted/40">
+    <div className="flex h-full w-full flex-col bg-muted/40">
+      {/* Header */}
       <div className="flex items-center justify-between gap-4 border-b border-gray-200/60 bg-white/70 px-4 py-3 backdrop-blur-md shadow-sm">
         <Link
           href="/dashboard"
@@ -35,16 +37,16 @@ const ChatPageComponent = ({
           </h1>
         </div>
 
-        <div className="flex items-center">
-          <SignOutButton user={user} />
-        </div>
+        <SignOutButton user={user} />
       </div>
 
-      <div className="flex-1 overflow-hidden p-3">
+      {/* Main */}
+      <div className="flex-1 min-h-0 overflow-hidden p-3">
         <ResizablePanelGroup
           direction="horizontal"
-          className="h-full rounded-xl border  bg-background shadow-sm"
+          className="h-full rounded-xl border bg-background shadow-sm"
         >
+          {/* PDF */}
           <ResizablePanel
             defaultSize={40}
             minSize={30}
@@ -55,32 +57,20 @@ const ChatPageComponent = ({
                 src={pdfUrl}
                 className="h-full w-full rounded-lg border bg-white"
                 loading="lazy"
-              
               />
             </div>
           </ResizablePanel>
 
-          <ResizableHandle
-            className="
-              w-1 bg-border
-              hover:bg-blue-300/60
-              transition-colors
-              cursor-col-resize
-            "
-          />
+          <ResizableHandle className="w-1 cursor-col-resize bg-border hover:bg-blue-300/60 transition-colors" />
 
-          {/* Chat Panel */}
+          {/* Chat */}
           <ResizablePanel
             defaultSize={60}
             minSize={50}
-            className="flex flex-col"
+            className="flex min-h-0 flex-col"
           >
-            <div className="flex-1 rounded-r-xl bg-background p-4">
-              {/* ChatbotComponent goes here */}
-              <div className="flex h-full items-center justify-center text-sm text-muted-foreground">
-                Chat panel
-                <ChatPanel pdf={pdf}/>
-              </div>
+            <div className="flex-1 min-h-0 rounded-r-xl bg-background">
+              <ChatPanel pdf={pdf} />
             </div>
           </ResizablePanel>
         </ResizablePanelGroup>

@@ -34,7 +34,7 @@ interface FullPDFChunkProps {
 }
 
 
-const SCORE_THRESHOLD = 0.35;
+const SCORE_THRESHOLD = 0.15;
 
 export async function similaritySearch({query , userId , pdfId , topK=3 , filter}:SimilaritySearchProps) : Promise<SimilaritySearchResult[]> {
 

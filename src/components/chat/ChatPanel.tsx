@@ -4,6 +4,7 @@ import { Loader2 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { Button } from "../ui/button";
 import { toast } from "sonner";
+import Chatbot from "./Chatbot";
 
 const ChatPanel = ({ pdf }: { pdf: Document }) => {
   const [status, setStatus] = useState(pdf.status);
@@ -73,9 +74,7 @@ const ChatPanel = ({ pdf }: { pdf: Document }) => {
   }
   if (status === "COMPLETED") {
     return (
-      <div className="flex h-full flex-col">
-        <div>ChatPanel</div>;
-      </div>
+        <div className="w-full h-full" > <Chatbot pdfId={pdf.id}/> </div>
     );
   }
 };
