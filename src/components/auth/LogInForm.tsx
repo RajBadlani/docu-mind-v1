@@ -1,29 +1,30 @@
 "use client";
 
 import { MessageCircleHeart } from "lucide-react";
-import { useState } from "react";
+import { useState, useTransition } from "react";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { Spinner } from "../ui/spinner";
 import Link from "next/link";
 import { signInAction } from "@/actions/authActions";
 import { toast } from "sonner";
-import { redirect } from "next/navigation";
+import { useRouter } from "next/navigation";
 import OAuthButtons from "./OAuthButton";
 
 const LogInForm = () => {
-  const [isPending, setIsPending] = useState(false);
+  const [isPending, startTransition] = useTransition();
+  const router = useRouter();
 
-  async function handleSubmit(formData: FormData) {
-    setIsPending(true);
-    const res = await signInAction(formData);
-    if (!res.success) {
-      toast.error(res.message);
-    } else {
-      toast.success(res.message);
-      redirect("/dashboard");
-    }
-    setIsPending(false);
+  function handleSubmit(formData: FormData) {
+    startTransition(async () => {
+      const res = await signInAction(formData);
+      if (!res.success) {
+        toast.error(res.message);
+      } else {
+        toast.success(res.message);
+        router.push("/dashboard");
+      }
+    });
   }
   return (
     <main className="min-h-screen flex items-center justify-center  px-4">
@@ -82,7 +83,14 @@ const LogInForm = () => {
             disabled={isPending}
             className="w-full bg-blue-600 text-white font-medium py-2 rounded-md hover:bg-blue-700 transition cursor-pointer"
           >
-            {isPending ? <Spinner /> : "Log In"}
+            {isPending ? (
+              <div className="flex items-center gap-2">
+                <Spinner className="text-white" />
+                <span>Logging in...</span>
+              </div>
+            ) : (
+              "Log In"
+            )}
           </Button>
         </form>
         <div className="flex items-center justify-center   gap-2">

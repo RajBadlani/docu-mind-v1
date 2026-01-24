@@ -89,7 +89,14 @@ const SignUpForm = () => {
             disabled={isPending}
             className="h-11 mt-2 bg-blue-600 hover:bg-blue-700 transition font-medium cursor-pointer"
           >
-            {isPending ? <Spinner /> : "Create Account"}
+            {isPending ? (
+              <div className="flex items-center gap-2">
+                <Spinner className="text-white" />
+                <span>Creating Account...</span>
+              </div>
+            ) : (
+              "Create Account"
+            )}
           </Button>
         </form>
 

@@ -4,10 +4,12 @@ import { authClient } from "@/lib/auth-client";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import { useState } from "react";
-import { Spinner } from "@/components/ui/spinner"; 
+import { Spinner } from "@/components/ui/spinner";
 
 export default function OAuthButtons() {
-  const [loadingProvider, setLoadingProvider] = useState<null | "google" | "github">(null);
+  const [loadingProvider, setLoadingProvider] = useState<
+    null | "google" | "github"
+  >(null);
 
   const handleOAuthLogin = async (provider: "google" | "github") => {
     try {
@@ -16,7 +18,6 @@ export default function OAuthButtons() {
         provider,
         callbackURL: "/dashboard",
       });
-      
     } catch (err) {
       console.error("OAuth error:", err);
       setLoadingProvider(null);
@@ -27,11 +28,11 @@ export default function OAuthButtons() {
     <div className="flex flex-col gap-5 w-full max-w-sm">
       <Button
         onClick={() => handleOAuthLogin("google")}
-        disabled={loadingProvider === "google"}
+        disabled={loadingProvider !== null}
         className="flex items-center justify-center gap-2 bg-white border text-gray-800 hover:bg-gray-100"
       >
         {loadingProvider === "google" ? (
-          <Spinner /> 
+          <Spinner />
         ) : (
           <Image src="/google.png" alt="google" width={20} height={20} />
         )}
@@ -40,7 +41,7 @@ export default function OAuthButtons() {
 
       <Button
         onClick={() => handleOAuthLogin("github")}
-        disabled={loadingProvider === "github"}
+        disabled={loadingProvider !== null}
         className="flex items-center justify-center gap-2 bg-white border text-gray-800 hover:bg-gray-100"
       >
         {loadingProvider === "github" ? (
