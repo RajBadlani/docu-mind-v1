@@ -70,11 +70,11 @@ const HeroSection = () => {
                       </div>
       
                       <Image
-                        src="/image.png"
+                        src="/heroSection.png"
                         alt="PDF Chatbot preview"
                         width={1400}
                         height={900}
-                        className="w-full object-cover p-2"
+                        className="w-full object-cover p-2 "
                       />
                     </div>
                   </div>

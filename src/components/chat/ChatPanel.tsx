@@ -5,8 +5,15 @@ import { useEffect, useRef, useState } from "react";
 import { Button } from "../ui/button";
 import { toast } from "sonner";
 import Chatbot from "./Chatbot";
+import { UIMessage as Message } from "ai";
 
-const ChatPanel = ({ pdf }: { pdf: Document }) => {
+const ChatPanel = ({
+  pdf,
+  initialMessages,
+}: {
+  pdf: Document;
+  initialMessages?: Message[];
+}) => {
   const [status, setStatus] = useState(pdf.status);
   const prevStatusRef = useRef(pdf.status);
 
@@ -74,7 +81,10 @@ const ChatPanel = ({ pdf }: { pdf: Document }) => {
   }
   if (status === "COMPLETED") {
     return (
-        <div className="w-full h-full" > <Chatbot pdfId={pdf.id}/> </div>
+      <div className="w-full h-full">
+        {" "}
+        <Chatbot pdfId={pdf.id} initialMessages={initialMessages} />{" "}
+      </div>
     );
   }
 };

@@ -11,14 +11,18 @@ import Link from "next/link";
 import SignOutButton from "../auth/SignOutButton";
 import ChatPanel from "./ChatPanel";
 
+import { UIMessage as Message } from "ai";
+
 const ChatPageComponent = ({
   pdf,
   pdfUrl,
   user,
+  initialMessages = [],
 }: {
   pdf: Document;
   pdfUrl: string;
   user: User;
+  initialMessages?: Message[];
 }) => {
   return (
     <div className="flex h-full w-full flex-col bg-muted/40">
@@ -42,38 +46,48 @@ const ChatPageComponent = ({
 
       {/* Main */}
       <div className="flex-1 min-h-0 overflow-hidden p-3">
-        <ResizablePanelGroup
-          direction="horizontal"
-          className="h-full rounded-xl border bg-background shadow-sm"
-        >
-          {/* PDF */}
-          <ResizablePanel
-            defaultSize={40}
-            minSize={30}
-            className="hidden lg:block overflow-hidden"
+        {/* Desktop View */}
+        <div className="hidden xl:flex h-full w-full">
+          <ResizablePanelGroup
+            direction="horizontal"
+            className="h-full rounded-xl border bg-background shadow-sm"
           >
-            <div className="h-full w-full rounded-l-xl bg-muted/20 p-2">
-              <iframe
-                src={pdfUrl}
-                className="h-full w-full rounded-lg border bg-white"
-                loading="lazy"
-              />
-            </div>
-          </ResizablePanel>
+            {/* PDF */}
+            <ResizablePanel
+              defaultSize={40}
+              minSize={30}
+              className="overflow-hidden"
+            >
+              <div className="h-full w-full rounded-l-xl bg-muted/20 p-2">
+                <iframe
+                  src={pdfUrl}
+                  className="h-full w-full rounded-lg border bg-white"
+                  loading="lazy"
+                />
+              </div>
+            </ResizablePanel>
 
-          <ResizableHandle className="w-1 cursor-col-resize bg-border hover:bg-blue-300/60 transition-colors" />
+            <ResizableHandle className="w-1 cursor-col-resize bg-border hover:bg-blue-300/60 transition-colors" />
 
-          {/* Chat */}
-          <ResizablePanel
-            defaultSize={60}
-            minSize={50}
-            className="flex min-h-0 flex-col"
-          >
-            <div className="flex-1 min-h-0 rounded-r-xl bg-background">
-              <ChatPanel pdf={pdf} />
-            </div>
-          </ResizablePanel>
-        </ResizablePanelGroup>
+            {/* Chat */}
+            <ResizablePanel
+              defaultSize={60}
+              minSize={50}
+              className="flex min-h-0 flex-col"
+            >
+              <div className="flex-1 min-h-0 rounded-r-xl bg-background">
+                <ChatPanel pdf={pdf} initialMessages={initialMessages} />
+              </div>
+            </ResizablePanel>
+          </ResizablePanelGroup>
+        </div>
+
+        {/* Mobile View */}
+        <div className="xl:hidden h-full flex flex-col">
+          <div className="h-full flex flex-col bg-background rounded-lg border">
+            <ChatPanel pdf={pdf} initialMessages={initialMessages} />
+          </div>
+        </div>
       </div>
     </div>
   );

@@ -51,7 +51,7 @@ const Features = () => {
                     <div className="relative aspect-4/3 lg:aspect-auto h-auto lg:h-full w-full max-w-125 rounded-lg overflow-hidden border-4 border-gray-300">
                       <Image
                         alt="feature-image"
-                        src="/image.png"
+                        src="/featuresImg.png"
                         fill
                         className="object-cover"
                       />

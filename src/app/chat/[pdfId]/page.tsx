@@ -1,3 +1,4 @@
+import { getChatMessages } from "@/actions/chatActions";
 import ChatPageComponent from "@/components/chat/ChatPageComponent";
 import { getUser } from "@/lib/getUser";
 import { prisma } from "@/lib/prisma";
@@ -24,9 +25,16 @@ const ChatPage = async ({ params }: { params: Promise<{ pdfId: string }> }) => {
   const signedUrl = await s3GetUrl(pdf.key);
   if (!signedUrl) throw Error("Unable to fetch pdf");
 
+  const { data: initialMessages } = await getChatMessages(pdfId);
+
   return (
     <div className="flex h-screen w-full">
-      <ChatPageComponent pdf={pdf} pdfUrl={signedUrl} user={user} />
+      <ChatPageComponent
+        pdf={pdf}
+        pdfUrl={signedUrl}
+        user={user}
+        initialMessages={initialMessages}
+      />
     </div>
   );
 };

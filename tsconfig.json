@@ -28,7 +28,8 @@
     "**/*.tsx",
     ".next/types/**/*.ts",
     ".next/dev/types/**/*.ts",
-    "**/*.mts"
-, "src/actions/pdfServerActionts"  ],
-  "exclude": ["node_modules" , "./src/components/ui"]
+    "**/*.mts",
+    "src/actions/pdfServerActionts"
+  ],
+  "exclude": ["node_modules"]
 }
