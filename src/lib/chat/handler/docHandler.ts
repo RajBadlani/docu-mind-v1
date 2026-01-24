@@ -13,8 +13,21 @@ export async function docQuestionHandler({
   pdfId: string;
   onFinish?: (text: string) => Promise<void> | void;
 }) {
+  // Expand the query to improve retrieval
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  const { expandQuery } = require("@/lib/rag/queryExpander");
+
+  let searchQuery = query;
+  // Only expand if the query is relatively short to add context
+  if (query.length < 100) {
+    console.log("Expanding query...");
+    const expandedPart = await expandQuery(query);
+    console.log("Expanded Part:", expandedPart);
+    searchQuery = `${query} ${expandedPart}`;
+  }
+
   const chunks = await similaritySearch({
-    query,
+    query: searchQuery,
     userId,
     pdfId,
     topK: 5,
@@ -35,8 +48,6 @@ export async function docQuestionHandler({
     DOCUMENT CONTEXT:
     ${context}
 
-    USER QUESTION:
-    ${query}
     USER QUESTION:
     ${query}
 `,
