@@ -22,6 +22,7 @@ import { FormEvent, useEffect, useState } from "react";
 import { MessageSquare } from "lucide-react";
 import { DefaultChatTransport } from "ai";
 import { UIMessage as Message } from "@ai-sdk/react";
+import { toast } from "sonner";
 
 const MAX_LENGTH = 300;
 
@@ -32,8 +33,15 @@ export default function Chatbot({
   pdfId: string;
   initialMessages?: Message[];
 }) {
+  const [isLimitReached, setIsLimitReached] = useState(false);
   const { messages, setMessages, sendMessage, status, stop } = useChat({
     transport: new DefaultChatTransport({ api: "/api/chat" }),
+    onError: (error) => {
+      if (error.message.includes("Daily chat limit reached")) {
+        setIsLimitReached(true);
+        toast.error("Daily Limit reached try again tomorrow");
+      }
+    },
   });
 
   useEffect(() => {
@@ -131,10 +139,14 @@ export default function Chatbot({
       >
         <PromptInputTextarea
           maxLength={MAX_LENGTH}
-          disabled={status === "streaming"}
+          disabled={status === "streaming" || isLimitReached}
           onChange={(e) => setInputLength(e.target.value.length)}
           className="max-h-40 min-h-[60px] resize-none bg-transparent border-0 focus-visible:ring-0 text-base placeholder:text-gray-400"
-          placeholder="Ask a question..."
+          placeholder={
+            isLimitReached
+              ? "Daily limit reached. Try again tomorrow."
+              : "Ask a question..."
+          }
         />
 
         <div className="flex items-center justify-between p-2">
@@ -155,7 +167,7 @@ export default function Chatbot({
             </span>
             <PromptInputSubmit
               status={status}
-              disabled={status === "submitted"}
+              disabled={status === "submitted" || isLimitReached}
               className={`h-10 w-10 rounded-full shadow-lg transition-all duration-200
                 ${
                   status === "streaming"
