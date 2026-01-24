@@ -30,7 +30,7 @@ const UploadSection = () => {
       toast.error("Please upload a file smaller than 25MB");
       setTimeout(
         () => toast.message("Upgrade to PRO to upload larger files"),
-        1500
+        1500,
       );
       return;
     }
@@ -44,7 +44,7 @@ const UploadSection = () => {
         toast.error("PDF must not contain more than 20 pages.");
         setTimeout(
           () => toast.message("Upgrade to PRO to upload larger files"),
-          1500
+          1500,
         );
         return;
       }
@@ -66,6 +66,17 @@ const UploadSection = () => {
           pdfType: pdf.type,
         }),
       });
+
+      if (response.status === 403) {
+        toast.error("Free plan limit reached (3 PDFs).");
+        setTimeout(
+          () => toast.message("Upgrade to PRO to upload more files"),
+          1500,
+        );
+        setUploading(false);
+        return;
+      }
+
       if (!response.ok) throw new Error("Failed to get upload URL");
 
       const data = await response.json();
@@ -90,7 +101,7 @@ const UploadSection = () => {
       });
       if (!saveResponse.success) {
         throw new Error(
-          saveResponse.message || "Failed to save PDF info to database"
+          saveResponse.message || "Failed to save PDF info to database",
         );
       }
       toast.success(saveResponse.message || "PDF uploaded successfully!");
@@ -98,7 +109,7 @@ const UploadSection = () => {
     } catch (error) {
       console.log("Error during upload:", error);
       toast.error(
-        (error as Error).message || "An error occurred during upload."
+        (error as Error).message || "An error occurred during upload.",
       );
       setUploading(false);
     }
