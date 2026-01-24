@@ -116,18 +116,21 @@ const UploadSection = () => {
   }
 
   return (
-    <section className="relative w-full max-w-5xl mx-auto mt-4 rounded-xl bg-white p-4 sm:p-5 shadow-sm">
+    <section className="relative w-full max-w-5xl mx-auto rounded-xl bg-white/80 backdrop-blur-sm p-4 sm:p-6 shadow-sm border border-gray-100/50">
       <BorderBeam
         size={250}
-        duration={10}
-        delay={3}
-        colorFrom="blue"
-        colorTo="blue"
+        duration={12}
+        delay={9}
+        colorFrom="#3b82f6"
+        colorTo="#60a5fa"
+        className="opacity-40"
       />
       <label
         htmlFor="pdf-upload"
-        className="group block cursor-pointer rounded-xl border-2 border-dashed border-gray-300 transition-all hover:border-blue-500 hover:bg-blue-50/40"
+        className="group relative block cursor-pointer rounded-xl border-2 border-dashed border-gray-200 transition-all duration-300 hover:border-blue-400 hover:bg-blue-50/30 overflow-hidden"
       >
+        <div className="absolute inset-0 bg-blue-50/0 group-hover:bg-blue-50/20 transition-colors" />
+
         <input
           id="pdf-upload"
           type="file"
@@ -137,34 +140,42 @@ const UploadSection = () => {
           onChange={handleFile}
         />
 
-        <div className="flex flex-col items-center justify-center gap-3 p-6 sm:p-8 text-center min-h-65">
-          <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-blue-100 text-blue-600 transition-transform group-hover:scale-105">
-            <CloudUpload className="h-7 w-7" />
+        <div className="flex flex-col items-center justify-center gap-4 p-8 sm:p-12 text-center min-h-[280px]">
+          <div className="relative">
+            <div className="absolute -inset-4 rounded-full bg-blue-100/50 blur-lg opacity-0 group-hover:opacity-100 transition-opacity" />
+            <div className="relative flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-50 to-blue-100 text-blue-600 shadow-sm ring-1 ring-blue-100 transition-transform duration-300 group-hover:scale-110 group-hover:-translate-y-1">
+              <CloudUpload className="h-8 w-8" />
+            </div>
           </div>
 
-          <h2 className="text-base sm:text-lg font-semibold text-gray-900">
-            Upload your PDF
-          </h2>
-
-          <p className="text-sm text-gray-600 max-w-xs">
-            Drag & drop your file here or click below to browse
-          </p>
+          <div className="flex flex-col gap-1 z-10">
+            <h2 className="text-lg sm:text-xl font-bold text-gray-800 tracking-tight">
+              Upload your PDF
+            </h2>
+            <p className="text-sm text-gray-500 max-w-xs mx-auto">
+              Drag & drop your file here or click to browse
+            </p>
+          </div>
 
           <Button
             type="button"
             disabled={uploading}
-            className="mt-2 rounded-lg bg-blue-600 px-5 py-2 text-sm font-medium hover:bg-blue-700"
+            className="mt-2 rounded-full bg-linear-to-r from-blue-600 to-blue-500 px-8 py-6 text-sm font-semibold shadow-lg shadow-blue-500/20 hover:shadow-blue-500/30 hover:-translate-y-0.5 transition-all"
           >
-            {uploading ? "Uploading..." : "Browse Files"}
+            {uploading ? (
+              <span className="flex items-center gap-2">
+                <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                Uploading...
+              </span>
+            ) : (
+              "Select PDF File"
+            )}
           </Button>
 
-          <div className="mt-3 flex flex-col gap-1 text-xs text-gray-500">
-            <span>
-              Max file size: <strong>25MB</strong>
-            </span>
-            <span>
-              Max pages: <strong>20 pages</strong>
-            </span>
+          <div className="mt-4 flex items-center gap-4 text-xs font-medium text-gray-400 uppercase tracking-wider">
+            <span>Max 25MB</span>
+            <span className="w-1 h-1 rounded-full bg-gray-300" />
+            <span>Max 20 Pages</span>
           </div>
         </div>
       </label>

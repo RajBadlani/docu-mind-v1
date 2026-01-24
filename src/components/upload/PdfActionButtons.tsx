@@ -21,6 +21,7 @@ import { deletePdfAction } from "@/actions/pdfServerAction";
 const PdfActionButtons = ({ pdfId }: { pdfId: string }) => {
   const router = useRouter();
   const [isDeleting, setIsDeleting] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   async function handleView() {
     try {
@@ -40,6 +41,7 @@ const PdfActionButtons = ({ pdfId }: { pdfId: string }) => {
   }
 
   async function handleChat() {
+    setIsLoading(true);
     try {
       const res = await fetch(`/api/ingest/${pdfId}`, {
         method: "POST",
@@ -51,6 +53,7 @@ const PdfActionButtons = ({ pdfId }: { pdfId: string }) => {
     } catch (error) {
       console.error(error);
       toast.error("Unable to start chat");
+      setIsLoading(false);
     }
   }
 
@@ -65,7 +68,7 @@ const PdfActionButtons = ({ pdfId }: { pdfId: string }) => {
         toast.error(res.message || "Failed to delete PDF");
       }
     } catch (error) {
-       console.error(error);
+      console.error(error);
       toast.error("Internal Server error");
     } finally {
       setIsDeleting(false);
@@ -76,7 +79,7 @@ const PdfActionButtons = ({ pdfId }: { pdfId: string }) => {
     <div className="flex items-center gap-3 sm:gap-4">
       <button
         onClick={handleView}
-        disabled={isDeleting}
+        disabled={isDeleting || isLoading}
         className="p-1 rounded-md cursor-pointer hover:bg-gray-100 transition disabled:opacity-50"
       >
         <Eye width={22} height={22} />
@@ -86,7 +89,7 @@ const PdfActionButtons = ({ pdfId }: { pdfId: string }) => {
         <AlertDialogTrigger asChild>
           <button
             className="p-1 rounded-md cursor-pointer hover:bg-red-50 text-red-600 transition disabled:opacity-50"
-            disabled={isDeleting}
+            disabled={isDeleting || isLoading}
           >
             {isDeleting ? (
               <Loader2 className="animate-spin" width={20} height={20} />
@@ -100,19 +103,21 @@ const PdfActionButtons = ({ pdfId }: { pdfId: string }) => {
             <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
             <AlertDialogDescription>
               This action cannot be undone. This will permanently delete your
-              document along with any cached data and chat history associated with
-              it.
+              document along with any cached data and chat history associated
+              with it.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel disabled={isDeleting}>Cancel</AlertDialogCancel>
+            <AlertDialogCancel disabled={isDeleting || isLoading}>
+              Cancel
+            </AlertDialogCancel>
             <AlertDialogAction
               className="bg-red-600 hover:bg-red-700 focus:ring-red-600"
               onClick={(e) => {
                 e.preventDefault();
                 handleDelete();
               }}
-              disabled={isDeleting}
+              disabled={isDeleting || isLoading}
             >
               {isDeleting ? "Deleting..." : "Delete"}
             </AlertDialogAction>
@@ -122,10 +127,10 @@ const PdfActionButtons = ({ pdfId }: { pdfId: string }) => {
 
       <Button
         onClick={handleChat}
-        disabled={isDeleting}
-        className="cursor-pointer bg-blue-500 disabled:opacity-50"
+        disabled={isDeleting || isLoading}
+        className="cursor-pointer bg-blue-500 disabled:opacity-50 min-w-[80px] hover:bg-blue-600 transition"
       >
-        Chat
+        {isLoading ? <Loader2 className="animate-spin" /> : "Chat"}
       </Button>
     </div>
   );

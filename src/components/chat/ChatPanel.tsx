@@ -30,8 +30,8 @@ const ChatPanel = ({
       const res = await fetch(`/api/pdf/status/${pdf.id}`);
       if (!res.ok) return;
       const data = await res.json();
-      if (data.success && data.message !== status) {
-        setStatus(data.message);
+      if (data.success && data.status !== status) {
+        setStatus(data.status);
       }
     }, 2000);
 

@@ -7,7 +7,7 @@ interface UploadedFile {
   name: string;
   size: number;
   status: string;
-  key : string;
+  key: string;
 }
 
 interface UploadedFileListProps {
@@ -56,7 +56,7 @@ const UploadedFileList = ({ uploadedPdfs }: UploadedFileListProps) => {
 
                     {/* Right – Actions */}
                     <div className="shrink-0 flex items-center gap-2 ">
-                      <PdfActionButtons  pdfId={file.id} />
+                      <PdfActionButtons pdfId={file.id} />
                     </div>
                   </div>
                 </BlurFade>
