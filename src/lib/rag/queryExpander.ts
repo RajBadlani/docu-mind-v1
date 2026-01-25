@@ -9,7 +9,8 @@ export async function expandQuery(query: string): Promise<string> {
         "You are a helpful expert in query expansion and information retrieval.",
       prompt: `
         You are an AI assistant. Your goal is to generate 3 different versions of the given user query to improve document retrieval. 
-        Focus on generating synonyms, related questions, and a hypothetical answer to the question.
+        Focus on generating synonyms, related technical terms, and alternative phrasings that might appear in the document.
+        Do NOT generate a hypothetical answer.
         Return ONLY the expanded queries separated by spaces. Do not return any other text.
         
         Original Query: ${query}

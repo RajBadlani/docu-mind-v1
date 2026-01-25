@@ -32,13 +32,13 @@ interface FullPDFChunkProps {
   pdfId: string;
 }
 
-const SCORE_THRESHOLD = 0.15;
+const SCORE_THRESHOLD = 0.1;
 
 export async function similaritySearch({
   query,
   userId,
   pdfId,
-  topK = 3,
+  topK = 6,
   filter,
 }: SimilaritySearchProps): Promise<SimilaritySearchResult[]> {
   if (!process.env.PINECONE_API_KEY || !process.env.PINECONE_INDEX_NAME) {
