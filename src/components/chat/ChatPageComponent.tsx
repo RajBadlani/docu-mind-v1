@@ -1,6 +1,5 @@
 "use client";
 
-import { User, Document } from "@/generated/prisma/client";
 import {
   ResizableHandle,
   ResizablePanel,
@@ -12,6 +11,21 @@ import SignOutButton from "../auth/SignOutButton";
 import ChatPanel from "./ChatPanel";
 
 import { UIMessage as Message } from "ai";
+
+// Local interfaces to avoid tight coupling with Prisma
+interface User {
+  name: string;
+  email: string;
+  emailVerified: boolean;
+  plan: string;
+}
+
+interface Document {
+  id: string;
+  name: string;
+  status: string;
+  key: string;
+}
 
 const ChatPageComponent = ({
   pdf,

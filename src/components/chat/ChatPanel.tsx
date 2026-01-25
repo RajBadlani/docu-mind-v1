@@ -1,11 +1,16 @@
 "use client";
-import { Document } from "@/generated/prisma/client";
 import { Loader2 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { Button } from "../ui/button";
 import { toast } from "sonner";
 import Chatbot from "./Chatbot";
 import { UIMessage as Message } from "ai";
+
+// Local interface to avoid Prisma dependency
+interface Document {
+  id: string;
+  status: string;
+}
 
 const ChatPanel = ({
   pdf,
