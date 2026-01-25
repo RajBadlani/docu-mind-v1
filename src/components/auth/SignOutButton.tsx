@@ -1,5 +1,5 @@
 "use client";
-import { User } from "@/generated/prisma/client";
+
 import { UserIcon } from "lucide-react";
 import {
   DropdownMenu,
@@ -13,7 +13,12 @@ import { Button } from "../ui/button";
 import { signOutAction } from "@/actions/authActions";
 
 interface SignOutButtonProps {
-  user: User;
+  user: {
+    name: string;
+    email: string;
+    emailVerified: boolean;
+    plan: string;
+  };
 }
 
 const SignOutButton = ({ user }: SignOutButtonProps) => {
