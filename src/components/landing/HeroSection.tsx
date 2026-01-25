@@ -26,9 +26,9 @@ const HeroSection = () => {
             <div className="h-28 w-96 rounded-full blur-3xl opacity-25 bg-linear-to-r from-blue-300 via-cyan-300 to-blue-300" />
           </div>
 
-          <h1 className="font-extrabold text-4xl md:text-5xl lg:text-6xl leading-[1.05] tracking-tight text-gray-900">
+          <h1 className="font-extrabold text-4xl md:text-5xl lg:text-6xl leading-[1.1] tracking-tight text-gray-900 px-2">
             Turn silent PDFs into <br />
-            <span className="block h-[1.3em] min-w-[22ch] overflow-hidden bg-linear-to-r from-blue-600  to-blue-600 bg-clip-text text-transparent">
+            <span className="inline-block mt-1 sm:mt-0 h-[1.3em] w-full sm:w-auto sm:min-w-[22ch] overflow-hidden bg-linear-to-r from-blue-600 to-blue-600 bg-clip-text text-transparent align-bottom">
               <TypingAnimation
                 words={[
                   "smart conversations",

@@ -24,17 +24,17 @@ const DashBoard = async () => {
 
   return (
     <div className="min-h-screen w-full bg-pattern px-4 sm:px-6 lg:px-12 py-6">
-      <header className="flex items-center justify-between gap-4 px-2 sm:px-4 py-2">
-        <div>
-          <h1 className="font-bold text-lg sm:text-2xl lg:text-3xl">
+      <header className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 px-2 sm:px-4 py-2">
+        <div className="w-full sm:w-auto">
+          <h1 className="font-bold text-xl sm:text-2xl lg:text-3xl text-gray-900">
             Upload PDF Document
           </h1>
-          <p className="mt-1 text-sm sm:text-base text-gray-800 max-w-3xl">
+          <p className="mt-1 text-sm sm:text-base text-gray-600 max-w-3xl leading-relaxed">
             Upload your PDF documents and start a smart conversation — powered
             by AI.
           </p>
         </div>
-        <div className="mr-20 cursor-pointer">
+        <div className="self-end sm:self-auto sm:mr-4 lg:mr-8 cursor-pointer">
           <SignOutButton user={user} />
         </div>
       </header>
