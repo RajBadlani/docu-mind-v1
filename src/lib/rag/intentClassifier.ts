@@ -1,4 +1,4 @@
-import "dotenv/config"
+import "dotenv/config";
 import { groq } from "@ai-sdk/groq";
 import { generateObject } from "ai";
 import z from "zod";
@@ -13,7 +13,7 @@ const llmIntentEnum = z.enum([
   "DOC_SUMMARY_FULL",
   "DOC_SUMMARY_PAGE",
   "DOC_CONTENT_SUMMARY",
-  "UNKNOWN"
+  "UNKNOWN",
 ]);
 
 type Regex_Intent =
@@ -23,42 +23,58 @@ type Regex_Intent =
   | "GOODBYE"
   | "BOT_INFO";
 
-type IntentResult = { intent: Regex_Intent | null }; 
+type IntentResult = { intent: Regex_Intent | null };
 
 export function regexIntentClassifier(query: string): IntentResult | null {
   if (!query) return null;
 
   const msg = query.trim().toLowerCase();
 
-  if (/\b(and|also|then)\b.*\b(what|why|how|explain|tell|give|show|summarize)\b/.test(msg))
-    return {intent : null};
+  if (
+    /\b(and|also|then)\b.*\b(what|why|how|explain|tell|give|show|summarize)\b/.test(
+      msg,
+    )
+  )
+    return { intent: null };
 
-  if (/^(hi|hello|hey|yo|hola|namaste|good\s*(morning|afternoon|evening))[\s,!?.]*$/.test(msg)) 
-    return {intent : "GREETING"};
-  
-  if (/^(thanks|thank\s*you|thx|appreciate|much\s*appreciated)[!.]?$/.test(msg)) 
-    return {intent :"THANKS"};
+  if (
+    /^(hi|hello|hey|yo|hola|namaste|good\s*(morning|afternoon|evening))[\s,!?.]*$/.test(
+      msg,
+    )
+  )
+    return { intent: "GREETING" };
 
-  if (/\b(bye|goodbye|see\s*you|see\s*ya|take\s*care|exit|quit)\b/.test(msg)) 
-    return {intent :"GOODBYE"};
+  if (/^(thanks|thank\s*you|thx|appreciate|much\s*appreciated)[!.]?$/.test(msg))
+    return { intent: "THANKS" };
 
-  if (/\b(who\s*are\s*you|what\s*are\s*you|about\s*you|your\s*purpose|are\s*you\s*a\s*bot)\b/.test(msg)) 
-    return {intent :"BOT_INFO"};
+  if (/\b(bye|goodbye|see\s*you|see\s*ya|take\s*care|exit|quit)\b/.test(msg))
+    return { intent: "GOODBYE" };
 
-  if (/\b(current\s*(date|time)|what\s*time\s*is\s*it|today'?s\s*date)\b/.test(msg)) 
-  return {intent :"DATE_TIME"};
+  if (
+    /\b(who\s*are\s*you|what\s*are\s*you|about\s*you|your\s*purpose|are\s*you\s*a\s*bot)\b/.test(
+      msg,
+    )
+  )
+    return { intent: "BOT_INFO" };
 
-  return {intent :null};
+  if (
+    /\b(current\s*(date|time)|what\s*time\s*is\s*it|today'?s\s*date)\b/.test(
+      msg,
+    )
+  )
+    return { intent: "DATE_TIME" };
+
+  return { intent: null };
 }
 
-export async function llmIntentClassifier(query:string) {
-    const {object} = await generateObject({
-        model : groq("openai/gpt-oss-20b"),
-        
-        schema : z.object({
-            intent : llmIntentEnum
-        }),
-        system : `You are a strict intent classifier , who takes the user query
+export async function llmIntentClassifier(query: string) {
+  const { object } = await generateObject({
+    model: groq("openai/gpt-oss-20b"),
+
+    schema: z.object({
+      intent: llmIntentEnum,
+    }),
+    system: `You are a strict intent classifier , who takes the user query
         and classify the intent of it and return valid JSON.
 
         Your task is to :
@@ -83,11 +99,9 @@ export async function llmIntentClassifier(query:string) {
           If greeting or thanks is mixed with another request, ignore greeting/thanks.
           If multiple intents exist, choose the MOST IMPORTANT one.
           If intent is unclear, choose UNKNOWN.
-          `
-          ,
-        prompt: query
-    })
+          `,
+    prompt: query,
+  });
 
-    return object
+  return object;
 }
-
