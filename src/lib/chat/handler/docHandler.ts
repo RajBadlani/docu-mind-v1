@@ -20,9 +20,7 @@ export async function docQuestionHandler({
   let searchQuery = query;
   // Only expand if the query is relatively short to add context
   if (query.length < 100) {
-    console.log("Expanding query...");
     const expandedPart = await expandQuery(query);
-    console.log("Expanded Part:", expandedPart);
     searchQuery = `${query} ${expandedPart}`;
   }
 

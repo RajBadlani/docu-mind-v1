@@ -16,7 +16,7 @@ export async function intentRouter(
   switch (intent) {
     case "DOC_QUES":
     case "DOC_CONTENT_SUMMARY":
-      console.log("Routing to doc handler");
+
       return docQuestionHandler({
         query,
         userId: meta.userId,
@@ -25,7 +25,7 @@ export async function intentRouter(
       });
 
     case "DOC_SUMMARY_PAGE":
-      console.log("Routing to doc summary page handler");
+
       const pages = await extractPageNumbers(query);
       return docPageSummaryHandler({
         query,
@@ -36,7 +36,7 @@ export async function intentRouter(
       });
 
     case "DOC_SUMMARY_FULL":
-      console.log("Routing to doc full summary handler");
+
       return await docFullSummaryHandler({
         userId: meta.userId,
         pdfId: meta.pdfId,
@@ -44,7 +44,7 @@ export async function intentRouter(
       });
 
     default:
-      console.log("Routing to generic handler");
+
       return genericStreamHandler(intent, query, meta.onFinish);
   }
 }

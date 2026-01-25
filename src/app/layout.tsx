@@ -8,6 +8,13 @@ const victorMono = Victor_Mono({
   display: "swap",
 });
 
+export const metadata = {
+  title: "DocuMind AI - Chat with your PDFs",
+  description:
+    "Upload documents, ask natural questions, and get precise answers powered by AI.",
+  icons: [{ rel: "icon", url: "/favicon.ico" }],
+};
+
 export default function RootLayout({
   children,
 }: {
@@ -17,7 +24,7 @@ export default function RootLayout({
     <html lang="en" className={victorMono.variable}>
       <body className="bg-pattern antialiased">
         {children}
-        <Toaster position="top-center" richColors/>
+        <Toaster position="top-center" richColors />
       </body>
     </html>
   );

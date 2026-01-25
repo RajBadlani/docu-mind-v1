@@ -164,7 +164,7 @@ export async function POST(request: NextRequest) {
 
     return result.toUIMessageStreamResponse();
   } catch (error) {
-    console.log(`Error occured`, error);
+    console.error(`Error occured`, error);
     return NextResponse.json(
       { success: false, message: "Internal Server Error " },
       { status: 500 },

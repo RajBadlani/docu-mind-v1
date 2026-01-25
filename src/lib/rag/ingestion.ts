@@ -1,16 +1,16 @@
-import "dotenv/config"
-import { WebPDFLoader } from "@langchain/community/document_loaders/web/pdf"
+import "dotenv/config";
+import { WebPDFLoader } from "@langchain/community/document_loaders/web/pdf";
 import { RecursiveCharacterTextSplitter } from "@langchain/textsplitters";
 import { Pinecone } from "@pinecone-database/pinecone";
-import { PineconeStore } from "@langchain/pinecone"
+import { PineconeStore } from "@langchain/pinecone";
 import { JinaEmbeddings } from "@langchain/community/embeddings/jina";
 import { UnsupportedPdfError } from "../errorClass";
 
 interface FileProps {
-  pdfUrl : string,
-  pdfName : string,
-  pdfId : string,
-  userId : string,
+  pdfUrl: string;
+  pdfName: string;
+  pdfId: string;
+  userId: string;
 }
 
 function normalizeText(text: string): string {
@@ -21,9 +21,7 @@ function normalizeText(text: string): string {
 }
 
 export async function ingestion({ pdfUrl, pdfName, pdfId, userId }: FileProps) {
-
-    try {
-
+  try {
     if (!process.env.PINECONE_API_KEY)
       throw new Error("Missing Pinecone API Key");
     if (!process.env.JINA_EMBEDDING_API_KEY)
@@ -31,21 +29,20 @@ export async function ingestion({ pdfUrl, pdfName, pdfId, userId }: FileProps) {
     if (!process.env.PINECONE_INDEX_NAME)
       throw new Error("Missing Pinecone Index Name");
 
-    const controller = new AbortController()
-    const timeout = setTimeout(()=>controller.abort(),60_000)
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 60_000);
 
-    const response = await fetch(pdfUrl , { signal : controller.signal})
+    const response = await fetch(pdfUrl, { signal: controller.signal });
     clearTimeout(timeout);
 
     if (!response.ok) {
       throw new Error(`Failed to fetch PDF: ${response.status}`);
     }
 
-    const blob = await response.blob()
+    const blob = await response.blob();
 
-    const loader = new WebPDFLoader(blob , {splitPages : true})
-    const docs = await loader.load()
-    console.log(`Documents loaded`);
+    const loader = new WebPDFLoader(blob, { splitPages: true });
+    const docs = await loader.load();
 
     const numPages = docs.length;
     if (numPages === 0) {
@@ -54,25 +51,23 @@ export async function ingestion({ pdfUrl, pdfName, pdfId, userId }: FileProps) {
 
     const totalLength = docs.reduce(
       (acc, doc) => acc + doc.pageContent.length,
-      0
+      0,
     );
 
     const normalizedDoc = docs.map((doc) => ({
-    pageContent: normalizeText(doc.pageContent),
-    metadata: {
-      source : "pdf",
-    pdfName: pdfName,
-    pdfId : pdfId,
-    userId : userId,
-    page: doc.metadata?.loc?.pageNumber ?? null,
-    },
+      pageContent: normalizeText(doc.pageContent),
+      metadata: {
+        source: "pdf",
+        pdfName: pdfName,
+        pdfId: pdfId,
+        userId: userId,
+        page: doc.metadata?.loc?.pageNumber ?? null,
+      },
     }));
 
-    console.log(`Normalization Done`);
-
     const avgLength = totalLength / numPages;
-    console.log(avgLength)
-    let chunkSize : number, chunkOverlap : number;
+    console.log(avgLength);
+    let chunkSize: number, chunkOverlap: number;
 
     if (avgLength < 1500) {
       chunkSize = 1200;
@@ -84,41 +79,32 @@ export async function ingestion({ pdfUrl, pdfName, pdfId, userId }: FileProps) {
       chunkSize = 800;
       chunkOverlap = 300;
     }
-    console.log(chunkOverlap , chunkSize)
+    console.log(chunkOverlap, chunkSize);
 
     const splitter = new RecursiveCharacterTextSplitter({
-        chunkSize : chunkSize,
-        chunkOverlap : chunkOverlap
-    })
-    
-    const chunkedDoc = await splitter.splitDocuments(normalizedDoc)
-    chunkedDoc.map((doc)=>{
-        console.log(doc.pageContent , doc.metadata)
-    })
+      chunkSize: chunkSize,
+      chunkOverlap: chunkOverlap,
+    });
 
-    console.log(`Splitting Done`);
+    const chunkedDoc = await splitter.splitDocuments(normalizedDoc);
 
     const pinecone = new Pinecone({
-      apiKey : process.env.PINECONE_API_KEY
-    })
+      apiKey: process.env.PINECONE_API_KEY,
+    });
     const index = pinecone.Index(process.env.PINECONE_INDEX_NAME);
 
     const embeddings = new JinaEmbeddings({
-      apiKey : process.env.JINA_EMBEDDING_API_KEY,
-      model : "jina-embeddings-v3",
-      batchSize : 32
-    })
+      apiKey: process.env.JINA_EMBEDDING_API_KEY,
+      model: "jina-embeddings-v3",
+      batchSize: 32,
+    });
 
-    await PineconeStore.fromDocuments(chunkedDoc , embeddings , {
-      pineconeIndex : index,
-      namespace : userId
-    })
-
-    console.log(`Storing ${chunkedDoc.length} chunks in Pinecone...`);
-    console.log(`Successfully embeddings get stored`);
-    
-    } catch (error) {
-        console.error("PDF ingestion failed:", error);
-        throw error
-    }
+    await PineconeStore.fromDocuments(chunkedDoc, embeddings, {
+      pineconeIndex: index,
+      namespace: userId,
+    });
+  } catch (error) {
+    console.error("PDF ingestion failed:", error);
+    throw error;
   }
+}

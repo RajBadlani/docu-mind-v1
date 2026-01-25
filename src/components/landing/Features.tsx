@@ -1,83 +1,88 @@
-import React from 'react'
-import { MagicCard } from '../ui/magic-card'
-import Image from 'next/image'
+import React from "react";
+import { MagicCard } from "../ui/magic-card";
+import {
+  BookOpenText,
+  MessageCircleQuestion,
+  ShieldCheck,
+  Zap,
+} from "lucide-react";
 
 const Features = () => {
-      const featureCard = [
+  const featureCard = [
     {
       title: "Your documents, now interactive",
       description:
         "Instead of reading PDFs, talk to them. Explore ideas, clarify details, and uncover insights instantly.",
+      icon: <BookOpenText className="w-6 h-6 text-blue-600" />,
     },
     {
       title: "Ask questions, get precise answers",
       description:
         "Ask natural questions and receive clear, focused answers directly grounded in your documents.",
+      icon: <MessageCircleQuestion className="w-6 h-6 text-blue-600" />,
     },
     {
       title: "Built for accuracy you can trust",
       description:
         "Every answer is generated from relevant document sections, so responses stay factual and reliable.",
+      icon: <ShieldCheck className="w-6 h-6 text-blue-600" />,
     },
     {
       title: "Understand specific pages in seconds",
       description:
         "Summarize pages, explain sections, or drill into details without scanning the entire document.",
+      icon: <Zap className="w-6 h-6 text-blue-600" />,
     },
   ];
 
   return (
-            <section
-              id="features"
-              className="mt-24 relative w-full px-2 scroll-mt-24"
+    <section
+      id="features"
+      className="mt-24 relative w-full px-4 sm:px-6 lg:px-8 scroll-mt-24"
+    >
+      {/* Background Ambience */}
+      <div className="absolute inset-0 flex justify-center -z-10 overflow-hidden">
+        <div className="h-64 w-96 rounded-full blur-[100px] opacity-20 bg-blue-200/50" />
+      </div>
+
+      <div className="max-w-4xl mx-auto">
+        <div className="text-center mb-16">
+          <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight text-gray-900 mb-4">
+            Features
+          </h2>
+          <p className="text-gray-600 text-lg max-w-2xl mx-auto leading-relaxed">
+            Built for understanding documents,
+            <span className="text-blue-600 font-medium">
+              {" "}
+              not just searching them
+            </span>
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {featureCard.map((ele, idx) => (
+            <MagicCard
+              key={idx}
+              gradientColor="#e3efff"
+              className="group relative flex flex-col items-start gap-4 rounded-2xl bg-white/60 backdrop-blur-md border border-gray-100 p-8 transition-all duration-300 hover:shadow-lg hover:-translate-y-1 hover:border-blue-200"
             >
-              <div className="absolute inset-0 flex justify-center -z-10">
-                <div className="h-64 w-lg rounded-full blur-3xl opacity-15 bg-linear-to-r from-blue-300 via-sky-300 to-cyan-300" />
+              <div className="p-3 bg-blue-50 rounded-xl group-hover:bg-blue-100 transition-colors">
+                {ele.icon}
               </div>
-    
-              <div className="mx-auto max-w-2xl text-center mb-16">
-                <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight text-gray-900">
-                  Features
-                </h2>
-                <p className="mt-4 text-gray-600 text-base md:text-lg">
-                  Built for understanding documents,
-                  <span className="text-blue-600"> not just searching them</span>
+              <div>
+                <h3 className="text-lg font-bold text-gray-900 mb-2">
+                  {ele.title}
+                </h3>
+                <p className="text-gray-600 leading-relaxed">
+                  {ele.description}
                 </p>
               </div>
-    
-              <div className="mx-auto max-w-full mb-10">
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 items-stretch">
-                  <div className="flex justify-center">
-                    <div className="relative aspect-4/3 lg:aspect-auto h-auto lg:h-full w-full max-w-125 rounded-lg overflow-hidden border-4 border-gray-300">
-                      <Image
-                        alt="feature-image"
-                        src="/featuresImg.png"
-                        fill
-                        className="object-cover"
-                      />
-                    </div>
-                  </div>
-    
-                  <div className="flex flex-col gap-4">
-                    {featureCard.map((ele, idx) => (
-                      <MagicCard
-                        key={idx}
-                        gradientColor="#e3efff"
-                        className="group rounded-2xl bg-white/70 backdrop-blur-sm border border-blue-100 p-5 transition-all duration-300 ease-out hover:shadow-md hover:-translate-y-0.5"
-                      >
-                        <h3 className="text-base md:text-lg font-semibold tracking-tight text-black mb-1.5">
-                          {ele.title}
-                        </h3>
-                        <p className="text-sm text-gray-600 leading-relaxed">
-                          {ele.description}
-                        </p>
-                      </MagicCard>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </section>
-  )
-}
+            </MagicCard>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+};
 
-export default Features
+export default Features;

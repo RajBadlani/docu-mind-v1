@@ -4,6 +4,12 @@ import UploadSection from "@/components/upload/UploadSection";
 import { getUser } from "@/lib/getUser";
 import { prisma } from "@/lib/prisma";
 import { redirect } from "next/navigation";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Dashboard | DocuMind",
+  description: "Manage your documents and start chatting.",
+};
 
 const DashBoard = async () => {
   const authUser = await getUser();

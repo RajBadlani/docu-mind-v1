@@ -1,15 +1,20 @@
-import SignUpForm from "@/components/auth/SignUpForm"
-import { getUser } from "@/lib/getUser"
-import { redirect } from "next/navigation"
+import SignUpForm from "@/components/auth/SignUpForm";
+import { getUser } from "@/lib/getUser";
+import { redirect } from "next/navigation";
+import { Metadata } from "next";
 
-const SignUpPage = async() => {
-  const user = await getUser()
-    if(user) redirect("/dashboard")
+export const metadata: Metadata = {
+  title: "Sign Up | DocuMind",
+};
+
+const SignUpPage = async () => {
+  const user = await getUser();
+  if (user) redirect("/dashboard");
   return (
     <div>
-        <SignUpForm/>
+      <SignUpForm />
     </div>
-  )
-}
+  );
+};
 
-export default SignUpPage
+export default SignUpPage;
