@@ -10,19 +10,27 @@ export async function ingestPdfAsync(pdfId: string) {
   const signedUrl = await s3GetUrl(pdf.key);
 
   try {
-    await ingestion({
-      pdfUrl: signedUrl,
-      pdfName: pdf.name,
-      pdfId: pdf.id,
-      userId: pdf.userId,
-    });
+    // Race between ingestion and a safety timeout
+    await Promise.race([
+      ingestion({
+        pdfUrl: signedUrl,
+        pdfName: pdf.name,
+        pdfId: pdf.id,
+        userId: pdf.userId,
+      }),
+      new Promise((_, reject) =>
+        setTimeout(
+          () => reject(new Error("Ingestion timed out")),
+          50000, // 50s safety timeout (Vercel limit is usually 60s/10s)
+        ),
+      ),
+    ]);
 
     await prisma.document.update({
       where: { id: pdfId },
       data: { status: "COMPLETED" },
     });
   } catch (error) {
-
     if (error instanceof UnsupportedPdfError) {
       await prisma.document.update({
         where: { id: pdfId },

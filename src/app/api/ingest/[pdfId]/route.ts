@@ -1,7 +1,7 @@
 import { getUser } from "@/lib/getUser";
 import { prisma } from "@/lib/prisma";
 import { ingestPdfAsync } from "@/lib/rag/ingestionPdfAsync";
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest, NextResponse, after } from "next/server";
 
 export async function POST(
   req: NextRequest,
@@ -53,16 +53,20 @@ export async function POST(
       where: { id: pdfId },
       data: { status: "PROCESSING" },
     });
-    ingestPdfAsync(pdfId).catch(async (err) => {
-      console.error("Ingestion failed:", err);
-      await prisma.document.update({
-        where: { id: pdfId },
-        data: { status: "FAILED" },
-      });
+
+    after(async () => {
+      try {
+        await ingestPdfAsync(pdfId);
+      } catch (error) {
+        console.error("Background ingestion error:", error);
+        // ingestPdfAsync already handles DB updates for errors, but extra safety logging here.
+      }
     });
+
     return NextResponse.json({
       success: true,
       status: "PROCESSING",
+      message: "Ingestion started",
     });
   } catch (error) {
     console.error(`Error occured `, error);
